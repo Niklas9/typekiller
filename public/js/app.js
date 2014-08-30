@@ -1,4 +1,3 @@
-
 var KEYS_START_GAME = [13, 32];  // enter, space 
 
 var app = angular.module('Typekiller', ['ngResource', 'timer']);
@@ -7,7 +6,6 @@ var app = angular.module('Typekiller', ['ngResource', 'timer']);
 app.service('GameWords', function($resource) {
 	return $resource('./words.json', []);
 });
-
 
 
 // QUES(nandersson):
