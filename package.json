@@ -1,6 +1,6 @@
 {
   "name": "typekiller",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "A web browser client game to compete in typewriting.",
   "main": "index.js",
   "scripts": {
