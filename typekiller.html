@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="Typekiller">
+
+<head>
+	<meta charset="utf-8">
+	<title>Typekiller</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+	<script src="https://raw.github.com/siddii/angular-timer/master/dist/angular-timer.min.js"></script>
+	<script src="app.js"></script>
+	<link rel="stylesheet" href="app.css" />
+</head>
+
+<body ng-controller="GameCtrl" ng-keydown="keyDown($event)">
+
+<div id="game-ctrl">
+
+	<div id="type-box" ng-show="gameActive">
+		<p id="type-box-word">{{ gameState.currentWord }}</p>
+	</div>
+
+	<div id="game-state" ng-show="gameActive">
+		<p>Game state: {{ gameState }}</p>
+	</div>
+
+
+
+	<div id="start-box" ng-hide="gameActive">
+		<button type="button" ng-click="startGame()">
+			Start game fuckface, I'm ready!
+		</button>
+		<p>... or hit enter to start ...</p>
+	</div>
+
+	<timer></timer>
+
+</div>
+
+</body>
+</html>

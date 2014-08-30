@@ -1,0 +1,20 @@
+BODY { background-color: #2e3234;
+	   font-family: "proxima nova","helvetica neue",helvetica,arial; }
+BUTTON { background: #47d487; color: #fff; letter-spacing: 1px;
+		 border: 1px solid transparent; text-transform: uppercase;
+		 font-size: 16px; padding: 22px 40px; border-radius: 4px;
+		 cursor: pointer; }
+BUTTON:hover { opacity: 0.8; }
+TIMER { display: none; }
+
+#type-box { text-align: center; color: #000; font-weight: bold;
+			font-size: 40px; }
+#start-box { position: absolute; top: 50%; left: 50%; margin-top: -40px;
+		     margin-left: -200px; }
+#start-box P { text-align: center; display: block; font-style: italic; }
+#start-box BUTTON { width: 400px; height: 80px; }
+#game-state { position: absolute; top: 100%; margin-top: -60px; width: 100%; }
+#game-state P { text-align: center; color: #fff; }
+
+.green { color: green; }
+.red { color: red; }
