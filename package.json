@@ -1,0 +1,29 @@
+{
+  "name": "typekiller",
+  "version": "0.1b",
+  "description": "A web browser client game to compete in typewriting.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "~3.4.x"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Niklas9/typekiller"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "Niklas9",
+  "contributors": [
+    "Niklas9 <nandersson900@gmail.com>"
+  ],
+  "license": "MIT"
+}
