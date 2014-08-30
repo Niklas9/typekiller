@@ -8,7 +8,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
-	<script src="https://raw.github.com/siddii/angular-timer/master/dist/angular-timer.min.js"></script>
+	<script src="angular-timer.min.js"></script>
 	<script src="app.js"></script>
 	<link rel="stylesheet" href="app.css" />
 </head>
@@ -24,8 +24,6 @@
 	<div id="game-state" ng-show="gameActive">
 		<p>Game state: {{ gameState }}</p>
 	</div>
-
-
 
 	<div id="start-box" ng-hide="gameActive">
 		<button type="button" ng-click="startGame()">

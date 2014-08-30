@@ -9,12 +9,13 @@ TIMER { display: none; }
 
 #type-box { text-align: center; color: #000; font-weight: bold;
 			font-size: 40px; }
+#type-box P { color: #fff; }
 #start-box { position: absolute; top: 50%; left: 50%; margin-top: -40px;
 		     margin-left: -200px; }
 #start-box P { text-align: center; display: block; font-style: italic; }
 #start-box BUTTON { width: 400px; height: 80px; }
 #game-state { position: absolute; top: 100%; margin-top: -60px; width: 100%; }
-#game-state P { text-align: center; color: #fff; }
+#game-state P { text-align: center; color: #fff; font-style: italic; }
 
 .green { color: green; }
 .red { color: red; }

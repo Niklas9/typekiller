@@ -1,3 +1,6 @@
+
+var KEYS_START_GAME = [13, 32];  // enter, space 
+
 var app = angular.module('Typekiller', ['ngResource', 'timer']);
 
 
@@ -8,6 +11,7 @@ app.service('GameWords', function($resource) {
 
 
 // QUES(nandersson):
+// * how to get rid of <timer/> completely?
 // * how can I split this up into several controllers or a better
 //   structure in general?
 
@@ -37,7 +41,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 		console.log('game stopped');
 	};
 	$scope.keyDown = function(e) {
-		if (!$scope.gameActive && e.keyCode === 13) {  // enter
+		if (!$scope.gameActive && KEYS_START_GAME.indexOf(e.keyCode) > -1) {
 			$scope.startGame();
 			return;
 		}
@@ -59,9 +63,9 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 	};
 	$scope.$on('timer-stopped', function (event, data) {
 		console.log('timer stopped, %s', data.millis);
-        $scope.gameState.totalTime = data.millis/1000;
-        console.log($scope.gameState);
-        showStats();
+		$scope.gameState.totalTime = data.millis/1000;
+		console.log($scope.gameState);
+		showStats();
     });
 	$scope.gameState = {};
 	// QUES(nandersson):
