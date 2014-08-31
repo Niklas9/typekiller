@@ -8,6 +8,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-sanitize.min.js"></script>
 	<script src="js/angular-timer.min.js"></script>
 	<script src="js/app.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -19,7 +20,7 @@
 <div id="game-ctrl">
 
 	<div id="type-box" ng-show="gameActive">
-		<p id="type-box-word">{{ gameState.currentWord }}</p>
+		<p id="type-box-word" ng-bind-html="currentWordHighlight">{{ currentWordHighlight }}</p>
 	</div>
 
 	<div id="game-state" ng-show="gameActive">

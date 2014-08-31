@@ -1,6 +1,6 @@
 var KEYS_START_GAME = [13, 32];  // enter, space 
 
-var app = angular.module('Typekiller', ['ngResource', 'timer']);
+var app = angular.module('Typekiller', ['ngResource', 'timer', 'ngSanitize']);
 
 
 app.service('GameWords', function($resource) {
@@ -13,7 +13,7 @@ app.service('GameWords', function($resource) {
 // * how can I split this up into several controllers or a better
 //   structure in general?
 
-app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
+app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, $timeout, GameWords) {
 	$scope.items = [];
     // QUES(nandersson):
     // * is this stuff really needed, I just want a simple
@@ -30,6 +30,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 		$scope.gameActive = true;
 		$scope.$broadcast('timer-start');
 		$scope.gameState.currentWord = $scope.items[0];
+        setWordHighlight();
 		console.log('game started');
 	};
 	$scope.stopGame = function() {
@@ -51,13 +52,15 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 		//console.log('key pushed: <%s>', c);
 		if ($scope.gameState.currentWord[$scope.gameState.charAt] === c) {
 			$scope.gameState.charAt++;
+            setWordHighlight($scope.gameState.charAt);
 			if ($scope.gameState.currentWord.length === $scope.gameState.charAt) {
 				$scope.gameState.correctWords++;
 				nextWord();
 			}
 		}
 		else {
-			nextWord();
+            setWordHighlight(1, true);
+			$timeout(nextWord, 100);  // sleep for 100ms if bad key
 		}
 	};
 	$scope.$on('timer-stopped', function (event, data) {
@@ -72,8 +75,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 	// * use $scope namespace even for functions that is never
 	//   intended to be called or used from HTML ?
 	var nextWord = function() {
-		console.log($scope.gameState);
-		$scope.gameState.charAt = 0;
+        $scope.gameState.charAt = 0;
 		$scope.gameState.itemAt++;
 		// check if we're done
 		if ($scope.gameState.itemAt === $scope.items.length) {
@@ -81,7 +83,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 			return;
 		}
 		$scope.gameState.currentWord = $scope.items[$scope.gameState.itemAt];
-		console.log($scope.gameState);
+        setWordHighlight();
 	};
 	var resetState = function() {
 		$scope.gameState = {
@@ -98,8 +100,23 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
         var wpm = ($scope.gameState.correctWords / $scope.gameState.totalTime) * 60;
 		$scope.gameState.statsWordsPerMin = wpm.toFixed(3);
 	};
+    // QUES(nandersson):
+    // * how to do this in a more angular way? HTML here really?
+    var setWordHighlight = function(charAt, wrong) {
+        var w = $scope.gameState.currentWord;
+        var letterOk = '<span class="green">%s</span>';
+        var letterBad = '<span class="red">%s</span>';
+        if (charAt === undefined || charAt === 0) {
+            $scope.currentWordHighlight = w;
+            return;
+        }
+        if (wrong) {
+            $scope.currentWordHighlight = letterBad.replace('%s', w);
+            return;
+        }
+        $scope.currentWordHighlight = letterOk.replace('%s', w.substring(0, charAt)) + w.substring(charAt, w.length);
+    };
     $scope.closeStats = function() {
-        console.log('asdf');
         $scope.gameOver = false;
         // get new
         new GameWords.query(function(res) {
