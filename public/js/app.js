@@ -1,4 +1,5 @@
 var KEYS_START_GAME = [13, 32];  // enter, space 
+var KEYS_IGNORE = [8, 46];  // backspace, delete
 
 var app = angular.module('Typekiller', ['ngResource', 'timer', 'ngSanitize']);
 
@@ -40,8 +41,11 @@ app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, 
 		console.log('game stopped');
 	};
 	$scope.keyDown = function(e) {
-        if ($scope.gameOver)  return;
-		if (!$scope.gameActive && KEYS_START_GAME.indexOf(e.keyCode) > -1) {
+        if ($scope.gameOver || KEYS_IGNORE.indexOf(e.keyCode) > -1) {
+            e.preventDefault();  // make sure browser doesn't go back in history
+            return;
+		}
+        if (!$scope.gameActive && KEYS_START_GAME.indexOf(e.keyCode) > -1) {
 			$scope.startGame();
 			return;
 		}
