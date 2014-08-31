@@ -4,7 +4,7 @@ var app = angular.module('Typekiller', ['ngResource', 'timer']);
 
 
 app.service('GameWords', function($resource) {
-	return $resource('./words.json', []);
+	return $resource('/words', []);
 });
 
 
@@ -15,21 +15,21 @@ app.service('GameWords', function($resource) {
 
 app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 	$scope.items = [];
-	// QUES(nandersson):
-	// * is this stuff really needed, I just want a simple
-	//   list items directly from words.json.. this wrapper should
-	//   exist elsewhere?
-	GameWords.query(function(res) {
-		angular.forEach(res, function(item) {
-			$scope.items.push(item);
-		});
-	});
+    // QUES(nandersson):
+    // * is this stuff really needed, I just want a simple
+    //   list items directly from words.json.. this wrapper should
+    //   exist elsewhere?
+    GameWords.query(function(res) {
+        angular.forEach(res, function(item) {
+            $scope.items.push(item.word.toUpperCase());
+        });
+    });
 	$scope.startGame = function() {
 		console.log('starting game');
-		resetState();
+        resetState();
 		$scope.gameActive = true;
 		$scope.$broadcast('timer-start');
-		$scope.gameState.currentWord = $scope.items[0].word;
+		$scope.gameState.currentWord = $scope.items[0];
 		console.log('game started');
 	};
 	$scope.stopGame = function() {
@@ -39,6 +39,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 		console.log('game stopped');
 	};
 	$scope.keyDown = function(e) {
+        if ($scope.gameOver)  return;
 		if (!$scope.gameActive && KEYS_START_GAME.indexOf(e.keyCode) > -1) {
 			$scope.startGame();
 			return;
@@ -66,6 +67,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 		showStats();
     });
 	$scope.gameState = {};
+    $scope.gameOver = false;
 	// QUES(nandersson):
 	// * use $scope namespace even for functions that is never
 	//   intended to be called or used from HTML ?
@@ -78,7 +80,7 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 			$scope.stopGame();
 			return;
 		}
-		$scope.gameState.currentWord = $scope.items[$scope.gameState.itemAt].word;
+		$scope.gameState.currentWord = $scope.items[$scope.gameState.itemAt];
 		console.log($scope.gameState);
 	};
 	var resetState = function() {
@@ -88,12 +90,24 @@ app.controller('GameCtrl', ['$scope', 'GameWords', function($scope, GameWords) {
 				charAt: 0,
 				itemAt: 0,
 				totalTime: 0,
+                statsWordsPerMin: 0,
 		};
 	};
 	var showStats = function() {
-		var wordsPerMin = ($scope.gameState.correctWords / $scope.gameState.totalTime) * 60;
-		alert('Completed '+ $scope.gameState.correctWords +' out of '+ $scope.items.length +' words in '+
-			  $scope.gameState.totalTime + 's\n\n'+
-			  'That\'s on average '+ wordsPerMin.toFixed(3) +' words per min');
+        $scope.gameOver = true;
+        var wpm = ($scope.gameState.correctWords / $scope.gameState.totalTime) * 60;
+		$scope.gameState.statsWordsPerMin = wpm.toFixed(3);
 	};
+    $scope.closeStats = function() {
+        console.log('asdf');
+        $scope.gameOver = false;
+        // get new
+        new GameWords.query(function(res) {
+            $scope.items = [];
+            angular.forEach(res, function(item) {
+                $scope.items.push(item.word.toUpperCase());
+            });
+        });
+       $scope.gameActive = false;
+    };
 }]);
