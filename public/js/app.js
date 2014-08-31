@@ -114,8 +114,9 @@ app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', 'Toplist', functi
         var name = DEFAULT_PLAYER_NAME;
         if ($scope.playerName !== '')  name = $scope.playerName;
 		var report = new Toplist({'name': name, 'wpm': wpm});
-        report.$save();
-        $scope.toplist = new Toplist.query();
+        report.$save(function(data) {
+            $scope.toplist = new Toplist.query();
+        });
         $scope.gameState.statsWordsPerMin = wpm.toFixed(3);
 	};
     // QUES(nandersson):
