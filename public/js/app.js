@@ -1,5 +1,6 @@
 var KEYS_START_GAME = [13, 32];  // enter, space 
 var KEYS_IGNORE = [8, 46];  // backspace, delete
+var DEFAULT_PLAYER_NAME = 'Nameless';
 
 var app = angular.module('Typekiller', ['ngResource', 'timer', 'ngSanitize']);
 
@@ -8,14 +9,19 @@ app.service('GameWords', function($resource) {
 	return $resource('/words', []);
 });
 
+app.service('Toplist', function($resource) {
+    return $resource('/toplist', []);
+});
 
 // QUES(nandersson):
 // * how to get rid of <timer/> completely?
 // * how can I split this up into several controllers or a better
 //   structure in general?
 
-app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, $timeout, GameWords) {
+app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', 'Toplist', function($scope, $timeout, GameWords, Toplist) {
 	$scope.items = [];
+    $scope.playerName = '';
+    $scope.showPlayerName = true;
     // QUES(nandersson):
     // * is this stuff really needed, I just want a simple
     //   list items directly from words.json.. this wrapper should
@@ -28,6 +34,9 @@ app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, 
 	$scope.startGame = function() {
 		console.log('starting game');
         resetState();
+        if ($scope.playerName !== '') {
+            $scope.showPlayerName = false;
+        }
 		$scope.gameActive = true;
 		$scope.$broadcast('timer-start');
 		$scope.gameState.currentWord = $scope.items[0];
@@ -41,16 +50,16 @@ app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, 
 		console.log('game stopped');
 	};
 	$scope.keyDown = function(e) {
-        if ($scope.gameOver || KEYS_IGNORE.indexOf(e.keyCode) > -1) {
-            e.preventDefault();  // make sure browser doesn't go back in history
-            return;
-		}
         if (!$scope.gameActive && KEYS_START_GAME.indexOf(e.keyCode) > -1) {
 			$scope.startGame();
 			return;
 		}
 		else if (!$scope.gameActive) {
 			return;
+		}
+        else if ($scope.gameOver || KEYS_IGNORE.indexOf(e.keyCode) > -1) {
+            e.preventDefault();  // make sure browser doesn't go back in history
+            return;
 		}
 		var c = String.fromCharCode(e.keyCode);
 		//console.log('key pushed: <%s>', c);
@@ -102,7 +111,12 @@ app.controller('GameCtrl', ['$scope', '$timeout', 'GameWords', function($scope, 
 	var showStats = function() {
         $scope.gameOver = true;
         var wpm = ($scope.gameState.correctWords / $scope.gameState.totalTime) * 60;
-		$scope.gameState.statsWordsPerMin = wpm.toFixed(3);
+        var name = DEFAULT_PLAYER_NAME;
+        if ($scope.playerName !== '')  name = $scope.playerName;
+		var report = new Toplist({'name': name, 'wpm': wpm});
+        report.$save();
+        $scope.toplist = new Toplist.query();
+        $scope.gameState.statsWordsPerMin = wpm.toFixed(3);
 	};
     // QUES(nandersson):
     // * how to do this in a more angular way? HTML here really?

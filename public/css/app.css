@@ -7,6 +7,7 @@ BUTTON { background: #47d487; color: #fff; letter-spacing: 1px;
 BUTTON:hover { opacity: 0.8; }
 BUTTON.again { margin-top: 50px; }
 TIMER { display: none; }
+INPUT { display: block; width: 100%; margin: 15px 0; padding: 5px; }
 
 #type-box { text-align: center; color: #000; font-weight: bold;
 			font-size: 40px; }
@@ -19,7 +20,7 @@ TIMER { display: none; }
 #game-state { position: absolute; top: 100%; margin-top: -60px; width: 100%; }
 #game-state P { text-align: center; color: #fff; font-style: italic; }
 #stats { width: 600px; margin: 0 auto; color: #fff; }
-
+#stats TABLE TD, #stats TABLE TH { width: 200px; }
 
 .green { color: green; }
 .red { color: red; }
